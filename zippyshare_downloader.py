@@ -20,21 +20,21 @@ def dl(url):
 
     print('Starting Zippyshare Downloader for %s...'%url)
 
-
     process = Popen(["phantomjs", "zippySolver.js", url], stdout=PIPE)
     (output, err) = process.communicate()
     exit_code = process.wait()
 
-    print("output:"+output.decode('utf-8'))
-
     url_download = output.decode('utf-8').rstrip()
 
-    filename_encoded = re.findall('"/.*"', output)[0].strip('"/')
+    print("output: \""+url_download+"\"")
+
+
+    filename_encoded = re.findall('"/.*"', url_download)[0].strip('"/')
     filename = parse.unquote(filename_encoded)
 
     req_download = request.urlopen(url_download)
     filesize = int(req_download.getheader('Content-Length'))
-    print('Downloading: {}'.format(filename))
+    print('Downloading: {} from {}'.format(filename, url_download))
     print('Size: {:.2f}MB'.format(filesize / 1000 / 1000))
 
     with open(filename, 'wb') as file:
